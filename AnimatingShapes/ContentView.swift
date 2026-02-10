@@ -9,53 +9,48 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
-
-    var body: some View {
-        NavigationSplitView {
+    var body: some View{
+        NavigationStack {
             List {
-                ForEach(items) { item in
+                Section("アニメーション") {
                     NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
+                        RollinRainbowView()
                     } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+                        Label("Rollin' Rainbow", systemImage: "sparkles")
+                    }
+                    
+                    NavigationLink {
+                        DragNDropDotsView()
+                    } label: {
+                        Label("Drag n' Drop It", systemImage: "hand.draw")
+                    }
+                    
+                    NavigationLink {
+                        DancingDotsView()
+                    } label: {
+                        Label("Dancing Dots", systemImage: "circle.grid.3x3.fill")
+                    }
+                    NavigationLink {
+                        ExplodingView()
+                    } label: {
+                        Label("ExplodingView", systemImage: "circle.grid.3x3.fill")
+                    }
+                    NavigationLink {
+                        HeartPulseView()
+                    }label:{Label("HeartPulseView",systemImage:"heart.fill")
+                    }
+                    NavigationLink {
+                        SpinningView()
+                    }label:{Label("SpinningView",systemImage:"ellipsis")
                     }
                 }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
-        } detail: {
-            Text("Select an item")
-        }
-    }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
+                .navigationTitle("サンプル一覧")
             }
         }
     }
 }
-
-#Preview {
-    ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
-}
+    
+    #Preview {
+        ContentView()
+            .modelContainer(for: Item.self, inMemory: true)
+    }
